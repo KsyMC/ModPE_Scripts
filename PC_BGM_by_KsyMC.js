@@ -2,7 +2,7 @@
 // 무단 배포를 금합니다!
 // En : This script is made ​​by KsyMC
  
-// MCPE VERSION 0.8.1
+// MCPE VERSION 0.9.5
 
 var mPlayer = null;
 var nowplaying = null;
