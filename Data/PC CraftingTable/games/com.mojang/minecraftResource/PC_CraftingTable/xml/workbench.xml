@@ -1,0 +1,916 @@
+<recipes>
+	<!-- 커스텀 조합법은 제작자 외에 추가 금지입니다. -->
+	<!-- 원하신다면 저 (제조일자)에게 문의 바랍니다. -->
+
+	<!-- TNT -->
+    <recipe>
+        <item0>289</item0>
+        <item3>12</item3>
+        <item6>289</item6>
+        <item1>12</item1>
+        <item4>289</item4>
+        <item7>12</item7>
+        <item2>289</item2>
+        <item5>12</item5>
+        <item8>289</item8>
+        <result>46</result>
+    </recipe>
+	<!-- 가공된 나무 -->
+    <recipe>
+        <item0>17</item0>
+        <result count="4">5</result>
+    </recipe>
+	<!-- 책장 -->
+    <recipe>
+        <item0>5</item0>
+        <item3>340</item3>
+        <item6>5</item6>
+        <item1>5</item1>
+        <item4>340</item4>
+        <item7>5</item7>
+        <item2>5</item2>
+        <item5>340</item5>
+        <item8>5</item8>
+        <result>47</result>
+    </recipe>
+	<!-- 양털 -->
+    <recipe>
+        <item0>287</item0>
+        <item3>287</item3>
+        <item1>287</item1>
+        <item4>287</item4>
+        <result>35</result>
+    </recipe>
+	<!-- 라이터 -->
+    <recipe>
+        <item0>265</item0>
+        <item4>265</item4>
+        <result>259</result>
+    </recipe>
+	<!-- 빵 -->
+    <recipe>
+        <item0>296</item0>
+        <item1>296</item1>
+        <item2>296</item2>
+        <result>35</result>
+    </recipe>
+	<!-- 케잌 -->
+    <recipe>
+        <item0 damage="1">325</item0>
+        <item3>353</item3>
+		<item6>296</item6>
+        <item3 damage="1">325</item3>
+		<item4>344</item4>
+		<item7>296</item7>
+        <item6 damage="1">325</item6>
+		<item5>353</item5>
+		<item8>296</item8>
+        <result>354</result>
+    </recipe>
+	<!-- 부드러운 사암 -->
+    <recipe>
+        <item0>24</item0>
+        <item3>24</item3>
+        <item1>24</item1>
+        <item4>24</item4>
+        <result damage="2" count="4">24</result>
+    </recipe>
+	<!-- 조각된 사암 -->
+    <recipe>
+        <item0 damage="1">44</item0>
+        <item1 damage="1">44</item1>
+        <result damage="1">24</result>
+    </recipe>
+	<!-- 벽돌 -->
+    <recipe>
+        <item0>336</item0>
+        <item3>336</item3>
+        <item1>336</item1>
+        <item4>336</item4>
+        <result>45</result>
+    </recipe>
+	<!-- 석영 블록 -->
+    <recipe>
+        <item0>406</item0>
+        <item3>406</item3>
+        <item1>406</item1>
+        <item4>406</item4>
+        <result>155</result>
+    </recipe>
+	<!-- 석영 블록 기둥 -->
+    <recipe>
+        <item0>155</item0>
+        <item3>155</item3>
+        <result damage="2" count="2">155</result>
+    </recipe>
+	<!-- 조각된 석영 블록 -->
+    <recipe>
+        <item0 damage="7">44</item0>
+        <item3 damage="7">44</item3>
+        <result damage="1">155</result>
+    </recipe>
+	<!-- 석재 벽돌 -->
+    <recipe>
+        <item0>1</item0>
+        <item3>1</item3>
+        <item1>1</item1>
+        <item4>1</item4>
+        <result count="4">98</result>
+    </recipe>
+	<!-- 네더 벽돌 -->
+    <recipe>
+        <item0>405</item0>
+        <item3>405</item3>
+        <item1>405</item1>
+        <item4>405</item4>
+        <result>112</result>
+    </recipe>
+	<!-- 트랩도어 -->
+    <recipe>
+        <item0>5</item0>
+        <item3>5</item3>
+		<item1>5</item1>
+        <item4>5</item4>
+		<item2>5</item2>
+        <item5>5</item5>
+        <result count="2">96</result>
+    </recipe>
+	<!-- 발광석 -->
+    <recipe>
+        <item0>348</item0>
+        <item3>348</item3>
+		<item1>348</item1>
+        <item4>348</item4>
+        <result>89</result>
+    </recipe>
+	<!-- 눈 -->
+    <recipe>
+        <item0>332</item0>
+        <item3>332</item3>
+		<item1>332</item1>
+        <item4>332</item4>
+        <result>80</result>
+    </recipe>
+	<!-- 점토 블럭 -->
+    <recipe>
+        <item0>337</item0>
+        <item3>337</item3>
+		<item1>337</item1>
+        <item4>337</item4>
+        <result>82</result>
+    </recipe>
+	<!-- /@@#$FE($#Fr324 -->
+	<recipe>
+        <item0>1</item0>
+        <item3>4</item3>
+        <item6>7</item6>
+        <item1>2</item1>
+        <item4>5</item4>
+        <item7>8</item7>
+        <item2>3</item2>
+        <item5>6</item5>
+        <item8>9</item8>
+        <result count="64">57</result>
+    </recipe>
+	<!-- 가위 -->
+    <recipe>
+        <item3>265</item3>
+        <item1>265</item1>
+        <result>359</result>
+    </recipe>
+	<!-- 그릇 -->
+    <recipe>
+        <item0>5</item0>
+        <item4>5</item4>
+        <item2>5</item2>
+        <result>281</result>
+    </recipe>
+	<!-- 버섯 스튜 -->
+    <recipe>
+        <item0>40</item0>
+		<item1>39</item1>
+        <item4>281</item4>
+        <result>282</result>
+    </recipe>
+	<!-- 설탕 -->
+    <recipe>
+        <item0>338</item0>
+        <result>353</result>
+    </recipe>
+	<!-- 수박씨 -->
+    <recipe>
+        <item0>360</item0>
+        <result>362</result>
+    </recipe>
+	<!-- 유리판 -->
+    <recipe>
+        <item0>20</item0>
+        <item3>20</item3>
+        <item1>20</item1>
+        <item4>20</item4>
+        <item2>20</item2>
+        <item5>20</item5>
+        <result count="16">102</result>
+    </recipe>
+	<!-- 울타리 문 -->
+    <recipe>
+        <item0>280</item0>
+        <item3>280</item3>
+        <item1>5</item1>
+        <item4>5</item4>
+        <item2>280</item2>
+        <item5>280</item5>
+        <result count="16">102</result>
+    </recipe>
+	<!-- 수박 -->
+    <recipe>
+        <item0>360</item0>
+        <item3>360</item3>
+        <item6>360</item6>
+        <item1>360</item1>
+        <item4>360</item4>
+        <item7>360</item7>
+        <item2>360</item2>
+        <item5>360</item5>
+        <item8>360</item8>
+        <result>103</result>
+    </recipe>
+	<!-- 금 원석 -->
+    <recipe>
+        <item0>41</item0>
+        <result count="9">266</result>
+    </recipe>
+	<!-- 철 원석 -->
+    <recipe>
+        <item0>42</item0>
+        <result count="9">265</result>
+    </recipe>
+	<!-- 다이아몬드 원석 -->
+    <recipe>
+        <item0>57</item0>
+        <result count="9">264</result>
+    </recipe>
+	<!-- 청동석 원석 -->
+    <recipe>
+        <item0>57</item0>
+        <result damage="4" count="9">351</result>
+    </recipe>
+	<!-- 활 -->
+    <recipe>
+		<item3>280</item3>
+        <item1>280</item1>
+        <item7>280</item7>
+		<item2>287</item2>
+		<item5>287</item5>
+		<item8>287</item8>
+        <result>261</result>
+    </recipe>
+	<!-- 화살 -->
+    <recipe>
+        <item0>318</item0>
+        <item3>280</item3>
+        <item6>288</item6>
+        <result count="4">262</result>
+    </recipe>
+	<!-- 막대기 -->
+    <recipe>
+        <item0>5</item0>
+        <item3>5</item3>
+        <result count="4">280</result>
+    </recipe>
+	<!-- 횟불 -->
+    <recipe>
+        <item0>263</item0>
+        <item3>280</item3>
+        <result count="4">50</result>
+    </recipe>
+	<!-- 샌드스톤 -->
+    <recipe>
+        <item0>12</item0>
+        <item3>12</item3>
+        <item1>12</item1>
+        <item4>12</item4>
+        <result>24</result>
+    </recipe>
+	<!-- 조합대 -->
+    <recipe>
+        <item0>5</item0>
+        <item3>5</item3>
+        <item1>5</item1>
+        <item4>5</item4>
+        <result>58</result>
+    </recipe>
+	<!-- 철 블럭 -->
+    <recipe>
+        <item0>265</item0>
+        <item3>265</item3>
+        <item6>265</item6>
+        <item1>265</item1>
+        <item4>265</item4>
+        <item7>265</item7>
+        <item2>265</item2>
+        <item5>265</item5>
+        <item8>265</item8>
+        <result>42</result>
+    </recipe>
+	<!-- 금 블럭 -->
+    <recipe>
+        <item0>266</item0>
+        <item3>266</item3>
+        <item6>266</item6>
+        <item1>266</item1>
+        <item4>266</item4>
+        <item7>266</item7>
+        <item2>266</item2>
+        <item5>266</item5>
+        <item8>266</item8>
+        <result>41</result>
+    </recipe>
+	<!-- 다이아몬드 블럭 -->
+    <recipe>
+        <item0>264</item0>
+        <item3>264</item3>
+        <item6>264</item6>
+        <item1>264</item1>
+        <item4>264</item4>
+        <item7>264</item7>
+        <item2>264</item2>
+        <item5>264</item5>
+        <item8>264</item8>
+        <result>57</result>
+    </recipe>
+	<!-- 철 도구 -->
+    <recipe>
+        <item0>265</item0>
+        <item1>265</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <item2>265</item2>
+        <result>257</result>
+    </recipe>
+    <recipe>
+        <item0>265</item0>
+        <item3>280</item3>
+        <item6>280</item6>
+        <result>256</result>
+    </recipe>
+    <recipe>
+        <item0>265</item0>
+        <item3>265</item3>
+        <item6>280</item6>
+        <result>267</result>
+    </recipe>
+    <recipe>
+        <item0>265</item0>
+        <item1>265</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>292</result>
+    </recipe>
+    <recipe>
+        <item0>265</item0>
+        <item3>265</item3>
+        <item1>265</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>258</result>
+    </recipe>
+	<!-- 나무 도구 -->
+    <recipe>
+        <item0>5</item0>
+        <item1>5</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <item2>5</item2>
+        <result>270</result>
+    </recipe>
+    <recipe>
+        <item0>5</item0>
+        <item3>280</item3>
+        <item6>280</item6>
+        <result>269</result>
+    </recipe>
+    <recipe>
+        <item0>5</item0>
+        <item3>5</item3>
+        <item6>280</item6>
+        <result>268</result>
+    </recipe>
+    <recipe>
+        <item0>5</item0>
+        <item1>5</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>290</result>
+    </recipe>
+    <recipe>
+        <item0>5</item0>
+        <item3>5</item3>
+        <item1>5</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>271</result>
+    </recipe>
+	<!-- 돌 도구 -->
+    <recipe>
+        <item0>4</item0>
+        <item1>4</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <item2>4</item2>
+        <result>274</result>
+    </recipe>
+    <recipe>
+        <item0>4</item0>
+        <item3>280</item3>
+        <item6>280</item6>
+        <result>273</result>
+    </recipe>
+    <recipe>
+        <item0>4</item0>
+        <item3>4</item3>
+        <item6>280</item6>
+        <result>272</result>
+    </recipe>
+    <recipe>
+        <item0>4</item0>
+        <item1>4</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>291</result>
+    </recipe>
+    <recipe>
+        <item0>4</item0>
+        <item3>4</item3>
+        <item1>4</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>275</result>
+    </recipe>
+	<!-- 금 도구 -->
+    <recipe>
+        <item0>266</item0>
+        <item1>266</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <item2>266</item2>
+        <result>285</result>
+    </recipe>
+    <recipe>
+        <item0>266</item0>
+        <item3>280</item3>
+        <item6>280</item6>
+        <result>284</result>
+    </recipe>
+    <recipe>
+        <item0>266</item0>
+        <item3>266</item3>
+        <item6>280</item6>
+        <result>283</result>
+    </recipe>
+    <recipe>
+        <item0>266</item0>
+        <item1>266</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>294</result>
+    </recipe>
+    <recipe>
+        <item0>266</item0>
+        <item3>266</item3>
+        <item1>266</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>286</result>
+    </recipe>
+	<!-- 다이아몬드 도구 -->
+    <recipe>
+        <item0>264</item0>
+        <item1>264</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <item2>264</item2>
+        <result>278</result>
+    </recipe>
+    <recipe>
+        <item0>264</item0>
+        <item3>280</item3>
+        <item6>280</item6>
+        <result>277</result>
+    </recipe>
+    <recipe>
+        <item0>264</item0>
+        <item3>264</item3>
+        <item6>280</item6>
+        <result>276</result>
+    </recipe>
+	<recipe>
+        <item0>264</item0>
+        <item1>264</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>293</result>
+    </recipe>
+    <recipe>
+        <item0>264</item0>
+        <item3>264</item3>
+        <item1>264</item1>
+        <item4>280</item4>
+        <item7>280</item7>
+        <result>279</result>
+    </recipe>
+    <!-- 창고 -->
+    <recipe>
+        <item0>5</item0>
+        <item3>5</item3>
+        <item6>5</item6>
+        <item1>5</item1>
+        <item7>5</item7>
+        <item2>5</item2>
+        <item5>5</item5>
+        <item8>5</item8>
+        <result>54</result>
+    </recipe>
+	<!-- 문 -->
+    <recipe>
+        <item0>5</item0>
+        <item3>5</item3>
+        <item6>5</item6>
+        <item1>5</item1>
+        <item4>5</item4>
+        <item7>5</item7>
+        <result>324</result>
+    </recipe>
+	<!-- 사다리 -->
+    <recipe>
+        <item0>280</item0>
+        <item3>280</item3>
+        <item6>280</item6>
+        <item4>280</item4>
+        <item2>280</item2>
+        <item5>280</item5>
+        <item8>280</item8>
+        <result count="3">65</result>
+    </recipe>
+	<!-- 양동이 -->
+    <recipe>
+        <item0>265</item0>
+        <item4>265</item4>
+        <item2>265</item2>
+        <result>325</result>
+    </recipe>
+	<!-- 표지판 -->
+    <recipe>
+        <item0>5</item0>
+        <item3>5</item3>
+        <item1>5</item1>
+        <item4>5</item4>
+        <item7>280</item7>
+        <item2>5</item2>
+        <item5>5</item5>
+        <result count="3">63</result>
+    </recipe>
+	<!-- 화로 -->
+    <recipe>
+        <item0>4</item0>
+        <item3>4</item3>
+        <item6>4</item6>
+        <item1>4</item1>
+        <item7>4</item7>
+        <item2>4</item2>
+        <item5>4</item5>
+        <item8>4</item8>
+        <result>61</result>
+    </recipe>
+	<!-- 계단 -->
+    <recipe>
+        <item6>5</item6>
+        <item4>5</item4>
+        <item7>5</item7>
+        <item2>5</item2>
+        <item5>5</item5>
+        <item8>5</item8>
+        <result count="4">53</result>
+    </recipe>
+    <recipe>
+        <item6>4</item6>
+        <item4>4</item4>
+        <item7>4</item7>
+        <item2>4</item2>
+        <item5>4</item5>
+        <item8>4</item8>
+		<result count="4">67</result>
+	</recipe>
+    <recipe>
+        <item6>45</item6>
+        <item4>45</item4>
+        <item7>45</item7>
+        <item2>45</item2>
+        <item5>45</item5>
+        <item8>45</item8>
+        <result count="4">108</result>
+    </recipe>
+	<recipe>
+        <item6>98</item6>
+        <item4>98</item4>
+        <item7>98</item7>
+        <item2>98</item2>
+        <item5>98</item5>
+        <item8>98</item8>
+        <result count="4">109</result>
+    </recipe>
+	<recipe>
+        <item6>112</item6>
+        <item4>112</item4>
+        <item7>112</item7>
+        <item2>112</item2>
+        <item5>112</item5>
+        <item8>112</item8>
+        <result count="4">114</result>
+    </recipe>
+	<recipe>
+        <item6>155</item6>
+        <item4>155</item4>
+        <item7>155</item7>
+        <item2>155</item2>
+        <item5>155</item5>
+        <item8>155</item8>
+        <result count="4">156</result>
+    </recipe>
+	<recipe>
+        <item6>24</item6>
+        <item4>24</item4>
+        <item7>24</item7>
+        <item2>24</item2>
+        <item5>24</item5>
+        <item8>24</item8>
+        <result count="4">128</result>
+    </recipe>
+	<!-- 갑옷 헬멧 -->
+	<recipe>
+        <item0>334</item0>
+        <item3>334</item3>
+        <item1>334</item1>
+        <item2>334</item2>
+        <item5>334</item5>
+        <result >298</result>
+    </recipe>
+	<recipe>
+        <item0>265</item0>
+        <item3>265</item3>
+        <item1>265</item1>
+        <item2>265</item2>
+        <item5>265</item5>
+        <result>306</result>
+    </recipe>
+	<recipe>
+        <item0>266</item0>
+        <item3>266</item3>
+        <item1>266</item1>
+        <item2>266</item2>
+        <item5>266</item5>
+        <result>314</result>
+    </recipe>
+	<recipe>
+        <item0>264</item0>
+        <item3>264</item3>
+        <item1>264</item1>
+        <item2>264</item2>
+        <item5>264</item5>
+        <result>310</result>
+    </recipe>
+	<!-- 갑옷 가슴 -->
+	<recipe>
+        <item0>334</item0>
+        <item3>334</item3>
+        <item6>334</item6>
+        <item4>334</item4>
+        <item7>334</item7>
+        <item2>334</item2>
+        <item5>334</item5>
+        <item8>334</item8>
+        <result>299</result>
+    </recipe>
+	<recipe>
+        <item0>265</item0>
+        <item3>265</item3>
+        <item6>265</item6>
+        <item4>265</item4>
+        <item7>265</item7>
+        <item2>265</item2>
+        <item5>265</item5>
+        <item8>265</item8>
+        <result>307</result>
+    </recipe>
+	<recipe>
+        <item0>266</item0>
+        <item3>266</item3>
+        <item6>266</item6>
+        <item4>266</item4>
+        <item7>266</item7>
+        <item2>266</item2>
+        <item5>266</item5>
+        <item8>266</item8>
+        <result>315</result>
+    </recipe>
+	<recipe>
+        <item0>264</item0>
+        <item3>264</item3>
+        <item6>264</item6>
+        <item4>264</item4>
+        <item7>264</item7>
+        <item2>264</item2>
+        <item5>264</item5>
+        <item8>264</item8>
+        <result>311</result>
+    </recipe>
+	<!-- 갑옷 다리 -->
+	<recipe>
+        <item0>334</item0>
+        <item3>334</item3>
+        <item6>334</item6>
+		<item1>334</item1>
+        <item2>334</item2>
+        <item5>334</item5>
+        <item8>334</item8>
+        <result>300</result>
+    </recipe>
+	<recipe>
+        <item0>265</item0>
+        <item3>265</item3>
+        <item6>265</item6>
+		<item1>265</item1>
+        <item2>265</item2>
+        <item5>265</item5>
+        <item8>265</item8>
+        <result>308</result>
+    </recipe>
+	<recipe>
+        <item0>266</item0>
+        <item3>266</item3>
+        <item6>266</item6>
+		<item1>266</item1>
+        <item2>266</item2>
+        <item5>266</item5>
+        <item8>266</item8>
+        <result>316</result>
+    </recipe>
+	<recipe>
+        <item0>264</item0>
+        <item3>264</item3>
+        <item6>264</item6>
+		<item1>264</item1>
+        <item2>264</item2>
+        <item5>264</item5>
+        <item8>264</item8>
+        <result>312</result>
+    </recipe>
+	<!-- 갑옷 부츠 -->
+	<recipe>
+        <item0>334</item0>
+        <item3>334</item3>
+        <item2>334</item2>
+        <item5>334</item5>
+        <result>301</result>
+    </recipe>
+	<recipe>
+        <item0>265</item0>
+        <item3>265</item3>
+        <item2>265</item2>
+        <item5>265</item5>
+        <result>309</result>
+    </recipe>
+	<recipe>
+        <item0>266</item0>
+        <item3>266</item3>
+        <item2>266</item2>
+        <item5>266</item5>
+        <result>317</result>
+    </recipe>
+	<recipe>
+        <item0>264</item0>
+        <item3>264</item3>
+        <item2>264</item2>
+        <item5>264</item5>
+        <result>313</result>
+    </recipe>
+	<!-- 울타리 -->
+    <recipe>
+        <item0>280</item0>
+        <item3>280</item3>
+        <item1>280</item1>
+        <item4>280</item4>
+        <item2>280</item2>
+        <item5>280</item5>
+        <result count="2">85</result>
+    </recipe>
+	<!-- 액자 -->
+    <recipe>
+        <item0>280</item0>
+        <item3>280</item3>
+        <item6>280</item6>
+        <item1>280</item1>
+        <item4>35</item4>
+        <item7>280</item7>
+        <item2>280</item2>
+        <item5>280</item5>
+        <item8>280</item8>
+        <result>321</result>
+    </recipe>
+	<!-- 종이 -->
+    <recipe>
+        <item0>338</item0>
+        <item1>338</item1>
+        <item2>338</item2>
+        <result>339</result>
+    </recipe>
+	<!-- 책 -->
+    <recipe>
+        <item0>339</item0>
+        <item3>339</item3>
+        <item1>339</item1>
+        <item4>334</item4>
+        <result>340</result>
+    </recipe>
+	<!-- 침대 -->
+    <recipe>
+        <item0>35</item0>
+        <item3>5</item3>
+        <item1>35</item1>
+        <item4>5</item4>
+		<item2>35</item2>
+        <item5>5</item5>
+        <result>355</result>
+    </recipe>
+	<!-- 뼛가루 -->
+    <recipe>
+        <item0>352</item0>
+        <result damage="15" count="3">351</result>
+    </recipe>
+    <!-- 반블럭 -->
+    <recipe>
+        <item0>1</item0>
+        <item1>1</item1>
+        <item2>1</item2>
+        <result count="6">44</result>
+    </recipe>
+    <recipe>
+        <item0>24</item0>
+        <item1>24</item1>
+        <item2>24</item2>
+        <result damage="1" count="6">44</result>
+    </recipe>
+    <recipe>
+        <item0>5</item0>
+        <item1>5</item1>
+        <item2>5</item2>
+        <result damage="2" count="6">44</result>
+    </recipe>
+    <recipe>
+        <item0>4</item0>
+        <item1>4</item1>
+        <item2>4</item2>
+        <result damage="3" count="6">44</result>
+    </recipe>
+	<recipe>
+        <item0>45</item0>
+        <item1>45</item1>
+        <item2>45</item2>
+        <result damage="4" count="6">44</result>
+    </recipe>
+    <recipe>
+        <item0>98</item0>
+        <item1>98</item1>
+        <item2>98</item2>
+        <result damage="5" count="6">44</result>
+    </recipe>
+    <recipe>
+        <item0>155</item0>
+        <item1>155</item1>
+        <item2>155</item2>
+        <result damage="7" count="6">44</result>
+    </recipe>
+	<!-- 스톤커터 -->
+	<recipe>
+        <item0>4</item0>
+        <item3>4</item3>
+        <item1>4</item1>
+        <item4>4</item4>
+        <result>245</result>
+    </recipe>
+	<!-- 네더 코어 -->
+	<recipe>
+        <item0>265</item0>
+        <item3>264</item3>
+        <item6>265</item6>
+        <item1>265</item1>
+        <item4>264</item4>
+        <item7>265</item7>
+        <item2>265</item2>
+        <item5>264</item5>
+        <item8>265</item8>
+        <result>247</result>
+    </recipe>
+	<!-- 커스텀 조합법은 제작자 외에 추가 금지입니다. -->
+	<!-- 원하신다면 저 (제조일자)에게 문의 바랍니다. -->
+</recipes>
