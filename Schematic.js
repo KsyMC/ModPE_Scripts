@@ -514,6 +514,9 @@ function modTick() {
 		if (timer >= time) {
 			var fx = selections['FirstX'], fy = selections['FirstY'], fz = selections['FirstZ'];
 			var sx = selections['SecondX'], sy = selections['SecondY'], sz = selections['SecondZ'];
+			var playerX = Math.floor(getPlayerX());
+			var playerY = Math.floor(getPlayerY() - 1);
+			var playerZ = Math.floor(getPlayerZ());
 
 			if (fx !== undefined && fy !== undefined && fz !== undefined
 			&& sx !== undefined && sy !== undefined && sz !== undefined) {
@@ -522,12 +525,14 @@ function modTick() {
 					for(var x = Math.min(fx, sx); x <= Math.max(fx, sx); x++) {
 					for(var z = Math.min(fz, sz); z <= Math.max(fz, sz); z++) {
 						if (stop) return;
-						if (((x == fx || x == sx || z == fz || z == sz) && (y == fy || y == sy))
-						|| (x == fx && z == sz) || (x == sx && z == fz) || (x == fx && z == fz) || (x == sx && z == sz)) {
-							Level.addParticle(ParticleType.redstone, x		, y + .5, z		, 0, 0, 0, 5);
-							Level.addParticle(ParticleType.redstone, x + 1, y + .5, z		, 0, 0, 0, 5);
-							Level.addParticle(ParticleType.redstone, x		, y + .5, z + 1, 0, 0, 0, 5);
-							Level.addParticle(ParticleType.redstone, x + 1, y + .5, z + 1, 0, 0, 0, 5);
+						if (parseInt(playerX - x) <= 20 && parseInt(playerY - y) <= 20 && parseInt(playerZ - z) <= 20) {
+							if (((x == fx || x == sx || z == fz || z == sz) && (y == fy || y == sy))
+							|| (x == fx && z == sz) || (x == sx && z == fz) || (x == fx && z == fz) || (x == sx && z == sz)) {
+								Level.addParticle(ParticleType.redstone, x		, y + .5, z		, 0, 0, 0, 5);
+								Level.addParticle(ParticleType.redstone, x + 1, y + .5, z		, 0, 0, 0, 5);
+								Level.addParticle(ParticleType.redstone, x		, y + .5, z + 1, 0, 0, 0, 5);
+								Level.addParticle(ParticleType.redstone, x + 1, y + .5, z + 1, 0, 0, 0, 5);
+							}
 						}
 					}}}
 				}})).start();
