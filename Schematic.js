@@ -568,7 +568,7 @@ function newLevel() {
 		file.mkdirs();
 	}
 
-	clientMessage("# Schematic Beta 1.0\n# By KsyMC\n# ksy4362@naver");
+	clientMessage("# Schematic Beta 1.0\n# By KsyMC\n# ksy4362@naver.com");
 }
 
 function procCmd(str) {
