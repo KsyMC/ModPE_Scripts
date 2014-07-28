@@ -495,52 +495,44 @@ NBTOutputStream.prototype = {
  * By KsyMC
  */
 
+const VERSION = 2;
+const VERSON_NAME = "1.1 BETA";
+
 var delay = 50;
 var selections = {};
 var schematic = null;
 var copyBlocks = null;
 var filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Schematic/";
 
-var stop = true;
-var time = 2 * 20;
+var time = 1 * 20;
 var timer = time;
 
-function leaveGame() {
-	stop = true;
-}
-
 function modTick() {
-	if (getCarriedItem() == 267) {
-		if (timer >= time) {
-			var fx = selections['FirstX'], fy = selections['FirstY'], fz = selections['FirstZ'];
-			var sx = selections['SecondX'], sy = selections['SecondY'], sz = selections['SecondZ'];
-			var playerX = Math.floor(getPlayerX());
-			var playerY = Math.floor(getPlayerY() - 1);
-			var playerZ = Math.floor(getPlayerZ());
+	if (timer >= time) {
+		var fx = selections['FirstX'], fy = selections['FirstY'], fz = selections['FirstZ'];
+		var sx = selections['SecondX'], sy = selections['SecondY'], sz = selections['SecondZ'];
+		var px = Math.floor(getPlayerX()), py = Math.floor(getPlayerY() - 1), pz = Math.floor(getPlayerZ());
 
-			if (fx !== undefined && fy !== undefined && fz !== undefined
-			&& sx !== undefined && sy !== undefined && sz !== undefined) {
-				new java.lang.Thread(new java.lang.Runnable({run: function() {
-					for(var y = Math.min(fy, sy); y <= Math.max(fy, sy); y++) {
-					for(var x = Math.min(fx, sx); x <= Math.max(fx, sx); x++) {
-					for(var z = Math.min(fz, sz); z <= Math.max(fz, sz); z++) {
-						if (stop) return;
-						if (parseInt(playerX - x) <= 20 && parseInt(playerY - y) <= 20 && parseInt(playerZ - z) <= 20) {
-							if (((x == fx || x == sx || z == fz || z == sz) && (y == fy || y == sy))
-							|| (x == fx && z == sz) || (x == sx && z == fz) || (x == fx && z == fz) || (x == sx && z == sz)) {
-								Level.addParticle(ParticleType.redstone, x		, y + .5, z		, 0, 0, 0, 5);
-								Level.addParticle(ParticleType.redstone, x + 1, y + .5, z		, 0, 0, 0, 5);
-								Level.addParticle(ParticleType.redstone, x		, y + .5, z + 1, 0, 0, 0, 5);
-								Level.addParticle(ParticleType.redstone, x + 1, y + .5, z + 1, 0, 0, 0, 5);
-							}
+		if (fx !== undefined && fy !== undefined && fz !== undefined
+		&& sx !== undefined && sy !== undefined && sz !== undefined) {
+			new java.lang.Thread(new java.lang.Runnable({run: function() {
+				for(var y = Math.min(fy, sy); y <= Math.max(fy, sy); y++) {
+				for(var x = Math.min(fx, sx); x <= Math.max(fx, sx); x++) {
+				for(var z = Math.min(fz, sz); z <= Math.max(fz, sz); z++) {
+					if (parseInt(px - x) <= 20 && parseInt(py - y) <= 20 && parseInt(pz - z) <= 20) {
+						if ((((x == fx || x == sx || z == fz || z == sz) && (y == fy || y == sy))
+						|| (x == fx && z == sz) || (x == sx && z == fz)
+						|| (x == fx && z == fz) || (x == sx && z == sz))
+						&& getTile(x, y, z) == 0) {
+							Level.addParticle(ParticleType.redstone, x + .5, y + .5, z + .5, 0, 0, 0, 2);
 						}
-					}}}
-				}})).start();
-			}
-			timer = 0;
-		} else {
-			timer++;
+					}
+				}}}
+			}})).start();
 		}
+		timer = 0;
+	} else {
+		timer++;
 	}
 }
 
@@ -566,14 +558,13 @@ function destroyBlock(x, y, z, side) {
 }
 
 function newLevel() {
-	stop = false;
-
 	var file = new java.io.File(filePath);
 	if (!file.exists()) {
 		file.mkdirs();
 	}
-
-	clientMessage("# Schematic Beta 1.0\n# By KsyMC\n# ksy4362@naver.com");
+	clientMessage("# Schematic " + VERSON_NAME + "\n# By KsyMC\n# ksy4362@naver.com");
+	clientMessage("[Schematic] Checking for updates ...");
+	checkUpdate();
 }
 
 function procCmd(str) {
@@ -584,21 +575,21 @@ function procCmd(str) {
 		switch (args[0]) {
 		case "import":
 			if (args[1] === undefined) {
-				clientMessage("#/sche\n  import <filename>.schematic");
+				clientMessage("# /sche\n  import <filename>.schematic");
 				break;
 			}
 			import_schematic(args.slice(1).join(" "));
 			break;
 		case "export":
 			if (args[1] === undefined) {
-				clientMessage("#/sche\n  export <filename>.schematic");
+				clientMessage("# /sche\n  export <filename>.schematic");
 				break;
 			}
 			if (copyBlocks === null) {
-				clientMessage("Please copy the block.\n  ＃\"/schematic copy\"");
+				clientMessage("Please copy the block.\n  ＃ \"/schematic copy\"");
 				break;
 			}
-			export_schematic(args.slice(1));
+			export_schematic(args.slice(1).join(" "));
 			break;
 		case "copy":
 			var fx = selections['FirstX'];
@@ -617,7 +608,7 @@ function procCmd(str) {
 			break;
 		case "paste":
 			if (schematic === null && copyBlocks === null) {
-				clientMessage("Please import before pasting.\n  ＃\"/sche import <filename>.schematic\"");
+				clientMessage("Please import before pasting.\n  ＃ \"/sche import <filename>.schematic\"");
 				break;
 			}
 			var playerX = Math.floor(getPlayerX());
@@ -639,7 +630,7 @@ function procCmd(str) {
 			break;
 		case "help":
 		default:
-			clientMessage("#/sche\n  [help | delay | import | export | copy | paste | filelist]");
+			clientMessage("#/sche\n  # [help | delay | import | export | copy | paste | filelist]");
 			break;
 		}
 	}
@@ -667,11 +658,11 @@ function import_schematic(filename) {
 		} else {
 			clientMessage("Not supported.");
 		}
-		nis.close();
 
+		nis.close();
 		clientMessage("Done.");
 	} catch (err) {
-		clientMessage("File does not exist or corrupted files.\n  " + err);
+		clientMessage("File does not exist or corrupted files.\n  # " + err);
 	}
 }
 
@@ -691,8 +682,8 @@ function export_schematic(filename) {
 			for(var x = 0; x < width; x++) {
 				var index = y * width * length + z * width + x;
 				var tx = copyBlocks['StartX'], ty = copyBlocks['StartY'], tz = copyBlocks['StartZ'];
-				blocks[index] = new java.lang.Byte(getTile(tx + x, ty + y, tz + z));
-				data[index] = new java.lang.Byte(Level.getData(tx + x, ty + y, tz + z));
+				blocks[index] = new java.lang.Byte(getTile(tx + x, ty + y, tz + z) & 0xFF);
+				data[index] = new java.lang.Byte(Level.getData(tx + x, ty + y, tz + z) & 0xFF);
 				java.lang.Thread.sleep(delay);
 			}}}
 
@@ -706,14 +697,14 @@ function export_schematic(filename) {
 				'Entities' : new ListTag("Entities", NBTConstants.TYPE_COMPOUND, []),
 				'TileEntities' : new ListTag("TileEntities", NBTConstants.TYPE_COMPOUND, [])
 			};
+
 			var file = new java.io.File(filePath, filename + ".schematic");
 			var nos = new NBTOutputStream(new java.io.FileOutputStream(file));
 			nos.writeTag(new CompoundTag("Schematic", tagMap));
 			nos.close();
-
 			clientMessage("Done.");
 		} catch (err) {
-			clientMessage("Failed to export blocks.\n  " + err);
+			clientMessage("Failed to export blocks.\n  # " + err);
 		}
 	}})).start();
 }
@@ -776,4 +767,29 @@ function paste(startX, startY, startZ) {
 			clientMessage("Done.");
 		}})).start();
 	}
+}
+
+function checkUpdate() {
+	try {
+		var url = new java.net.URL("https://gist.github.com/KsyMC/7543740/raw/VERSION");
+		var br = new java.io.BufferedReader(new java.io.InputStreamReader(url.openConnection().getInputStream()));
+		var json = br.readLine();
+		br.close();
+
+		if (json !== null) {
+			var jsonObject = new org.json.JSONObject(json);
+			var scheObject = jsonObject.getJSONObject("schematic");
+			var version = scheObject.getInt("version");
+			if (version > VERSION) {
+				var name = scheObject.getString("name");
+				var logArray = scheObject.getJSONArray("changelog");
+				clientMessage("[Schematic]\n  # The new version : " + name + " (" + version + ")");
+				clientMessage("[Schematic]\n  # " + logArray.getString(version));
+				return;
+			}
+		}
+	} catch (e) {
+		clientMessage("[Schematic]\n  # You are not connected to the Internet!");
+	}
+	clientMessage("[Schematic] The latest version.");
 }
