@@ -495,46 +495,14 @@ NBTOutputStream.prototype = {
  * By KsyMC
  */
 
-const VERSION = 7;
-const VERSON_NAME = "2.0.2 BETA";
+const VERSION = 8;
+const VERSON_NAME = "2.1 BETA";
 
 var delay = 50;
 var selections = {};
 var schematic = null;
 var copyBlocks = null;
 var filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Schematic/";
-
-const time = 1 * 20;
-var timer = time;
-
-function modTick() {
-	if (timer >= time) {
-		var fx = selections['FirstX'], fy = selections['FirstY'], fz = selections['FirstZ'];
-		var sx = selections['SecondX'], sy = selections['SecondY'], sz = selections['SecondZ'];
-		var px = Math.floor(getPlayerX()), py = Math.floor(getPlayerY() - 1), pz = Math.floor(getPlayerZ());
-
-		if (fx !== undefined && fy !== undefined && fz !== undefined
-		&& sx !== undefined && sy !== undefined && sz !== undefined) {
-			new java.lang.Thread(new java.lang.Runnable({run: function() {
-				for(var y = Math.min(fy, sy); y <= Math.max(fy, sy); y++) {
-				for(var x = Math.min(fx, sx); x <= Math.max(fx, sx); x++) {
-				for(var z = Math.min(fz, sz); z <= Math.max(fz, sz); z++) {
-					if (parseInt(px - x) <= 20 && parseInt(py - y) <= 20 && parseInt(pz - z) <= 20) {
-						if ((((x == fx || x == sx || z == fz || z == sz) && (y == fy || y == sy))
-						|| (x == fx && z == sz) || (x == sx && z == fz)
-						|| (x == fx && z == fz) || (x == sx && z == sz))
-						&& getTile(x, y, z) == 0) {
-							Level.addParticle(ParticleType.redstone, x + .5, y + .5, z + .5, 0, 0, 0, 2);
-						}
-					}
-				}}}
-			}})).start();
-		}
-		timer = 0;
-	} else {
-		timer++;
-	}
-}
 
 function useItem(x, y, z, i, b, s, id, bd) {
 	if (i == 267) {
