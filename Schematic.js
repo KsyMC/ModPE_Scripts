@@ -679,20 +679,24 @@ function export_schematic(filename) {
 			for(var y = 0; y < height; y++) {
 			for(var z = 0; z < length; z++) {
 			for(var x = 0; x < width; x++) {
+				blocks[index] = new java.lang.Byte(0);
+				data[index] = new java.lang.Byte(0);
+
 				var tx = copyBlocks['StartX'] + x;
 				var ty = copyBlocks['StartY'] + y;
 				var tz = copyBlocks['StartZ'] + z;
 
 				var id = getTile(tx, ty, tz);
-				var damage = Level.getData(tx, ty, tz);
+				if (id != 0) {
+					var damage = Level.getData(tx, ty, tz);
+					var index = y * width * length + z * width + x;
+					blocks[index] = new java.lang.Byte(id <= 127 ? id : (id - 256));
+					data[index] = new java.lang.Byte(damage);
 
-				var index = y * width * length + z * width + x;
-				blocks[index] = id <= 127 ? id : (id - 256);
-				data[index] = damage;
-
-				clientMessage("Exporting ... " + parseInt((index / size) * 100, 10) + " %"
-				+ "\n  # X "  + tx + ", Y " + ty + ", Z " + tz + ", Block : " + id + ":" + damage);
-				java.lang.Thread.sleep(delay);
+					clientMessage("Exporting ... " + parseInt((index / size) * 100, 10) + " %"
+					+ "\n  # X "  + tx + ", Y " + ty + ", Z " + tz + ", Block : " + id + ":" + damage);
+					java.lang.Thread.sleep(delay);
+				}
 			}}}
 
 			var tagMap = {
