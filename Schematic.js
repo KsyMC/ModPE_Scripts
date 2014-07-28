@@ -684,12 +684,10 @@ function export_schematic(filename) {
 				var tz = copyBlocks['StartZ'] + z;
 
 				var id = getTile(tx, ty, tz);
-				if (id > 127) id -= 256;
-
 				var damage = Level.getData(tx, ty, tz);
 
 				var index = y * width * length + z * width + x;
-				blocks[index] = id;
+				blocks[index] = id <= 127 ? id : (id - 256);
 				data[index] = damage;
 
 				clientMessage("Exporting ... " + parseInt((index / size) * 100, 10) + " %"
