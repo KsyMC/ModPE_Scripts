@@ -495,8 +495,8 @@ NBTOutputStream.prototype = {
  * By KsyMC
  */
 
-const VERSION = 6;
-const VERSON_NAME = "2.0.1 BETA";
+const VERSION = 7;
+const VERSON_NAME = "2.0.2 BETA";
 
 var delay = 50;
 var selections = {};
@@ -679,6 +679,7 @@ function export_schematic(filename) {
 			for(var y = 0; y < height; y++) {
 			for(var z = 0; z < length; z++) {
 			for(var x = 0; x < width; x++) {
+				var index = y * width * length + z * width + x;
 				blocks[index] = new java.lang.Byte(0);
 				data[index] = new java.lang.Byte(0);
 
@@ -689,7 +690,6 @@ function export_schematic(filename) {
 				var id = getTile(tx, ty, tz);
 				if (id != 0) {
 					var damage = Level.getData(tx, ty, tz);
-					var index = y * width * length + z * width + x;
 					blocks[index] = new java.lang.Byte(id <= 127 ? id : (id - 256));
 					data[index] = new java.lang.Byte(damage);
 
