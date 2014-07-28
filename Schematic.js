@@ -504,7 +504,7 @@ var schematic = null;
 var copyBlocks = null;
 var filePath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Schematic/";
 
-var time = 1 * 20;
+const time = 1 * 20;
 var timer = time;
 
 function modTick() {
@@ -607,7 +607,7 @@ function procCmd(str) {
 			copy(fx, fy, fz, sx, sy, sz);
 			break;
 		case "paste":
-			if (schematic === null && copyBlocks === null) {
+			if (schematic === null) {
 				clientMessage("Please import before pasting.\n  ＃ \"/sche import <filename>.schematic\"");
 				break;
 			}
@@ -654,7 +654,6 @@ function import_schematic(filename) {
 				'Entities' : tagMap['Entities'].getValue(),
 				'TileEntities' : tagMap['TileEntities'].getValue()
 			};
-			copyBlocks = null;
 		} else {
 			clientMessage("Not supported.");
 		}
@@ -680,10 +679,19 @@ function export_schematic(filename) {
 			for(var y = 0; y < height; y++) {
 			for(var z = 0; z < length; z++) {
 			for(var x = 0; x < width; x++) {
+				var tx = copyBlocks['StartX'] + x;
+				var ty = copyBlocks['StartY'] + y;
+				var tz = copyBlocks['StartZ'] + z;
+
+				var id = getTile(tx, ty, tz) & 0xFF;
+				var damage = Level.getData(tx, ty, tz) & 0xFF;
+
 				var index = y * width * length + z * width + x;
-				var tx = copyBlocks['StartX'], ty = copyBlocks['StartY'], tz = copyBlocks['StartZ'];
-				blocks[index] = new java.lang.Byte(getTile(tx + x, ty + y, tz + z) & 0xFF);
-				data[index] = new java.lang.Byte(Level.getData(tx + x, ty + y, tz + z) & 0xFF);
+				blocks[index] = id;
+				data[index] = damage;
+
+				clientMessage("Exporting ... " + parseInt((index / size) * 100, 10) + " %"
+				+ "\n  # X "  + tx + ", Y " + ty + ", Z " + tz + ", Block : " + id + ":" + damage);
 				java.lang.Thread.sleep(delay);
 			}}}
 
@@ -718,8 +726,6 @@ function copy(startX, startY, startZ, endX, endY, endZ) {
 		'StartZ' : Math.min(startZ, endZ),
 		'EndZ' : Math.max(startZ, endZ),
 	};
-
-	schematic = null;
 	clientMessage("Done.");
 }
 
@@ -730,6 +736,7 @@ function paste(startX, startY, startZ) {
 		var height = schematic['Height'];
 		var width = schematic['Width'];
 		var length = schematic['Length'];
+		var size = height * width * length;
 
 		new java.lang.Thread(new java.lang.Runnable({run: function() {
 			try {
@@ -740,25 +747,14 @@ function paste(startX, startY, startZ) {
 					var id = schematic['Blocks'][index];
 					var damage = schematic['Data'][index];
 					if (id != 0) {
-						setTile(x + startX, y + startY, z + startZ, id, damage);
+						var tx = x + startX;
+						var ty = y + startY;
+						var tz = z + startZ;
+
+						setTile(tx, ty, tz, id, damage);
+						clientMessage("Pasteing ... " + parseInt((index / size) * 100, 10) + " %"
+						+ "\n  # X "  + tx + ", Y " + ty + ", Z " + tz + ", Block : " + id + ":" + damage);
 						java.lang.Thread.sleep(delay);
-					}
-				}}}
-			} catch (err) {
-				clientMessage("Error : \n  " + err);
-			}
-			clientMessage("Done.");
-		}})).start();
-	} else if (copyBlocks !== null) {
-		new java.lang.Thread(new java.lang.Runnable({run: function() {
-			try {
-				for(var y = copyBlocks['StartY']; y <= copyBlocks['EndY']; y++) {
-				for(var z = copyBlocks['StartZ']; z <= copyBlocks['EndZ']; z++) {
-				for(var x = copyBlocks['StartX']; x <= copyBlocks['EndX']; x++) {
-					var id = getTile(x, y, z);
-					var damage = Level.getData(x, y, z);
-					if (id != 0) {
-						setTile(startX, startY, startZ, id, damage);
 					}
 				}}}
 			} catch (err) {
@@ -784,7 +780,9 @@ function checkUpdate() {
 				var name = scheObject.getString("name");
 				var logArray = scheObject.getJSONArray("changelog");
 				clientMessage("[Schematic]\n  # The new version : " + name + " (" + version + ")");
-				clientMessage("[Schematic]\n  # " + logArray.getString(version));
+				for (var i in logArray.getString(version).split("\n")) {
+					clientMessage("[Schematic]\n  # " + logArray[i]);
+				}
 				return;
 			}
 		}
