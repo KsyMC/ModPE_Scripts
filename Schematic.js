@@ -495,8 +495,8 @@ NBTOutputStream.prototype = {
  * By KsyMC
  */
 
-const VERSION = 2;
-const VERSON_NAME = "1.1 BETA";
+const VERSION = 4;
+const VERSON_NAME = "1.2.1 BETA";
 
 var delay = 50;
 var selections = {};
@@ -778,16 +778,17 @@ function checkUpdate() {
 			var version = scheObject.getInt("version");
 			if (version > VERSION) {
 				var name = scheObject.getString("name");
-				var logArray = scheObject.getJSONArray("changelog");
-				clientMessage("[Schematic]\n  # The new version : " + name + " (" + version + ")");
-				for (var i in logArray.getString(version).split("\n")) {
-					clientMessage("[Schematic]\n  # " + logArray[i]);
+				var logArray = scheObject.getJSONArray("changelog").getString(version).split("\n");
+				clientMessage("  # The new version : " + name + " (" + version + ")");
+				for (var i in logArray) {
+					clientMessage("  # " + logArray[i]);
 				}
 				return;
 			}
 		}
 	} catch (e) {
-		clientMessage("[Schematic]\n  # You are not connected to the Internet!");
+		clientMessage("  # You are not connected to the Internet!");
+		clientMessage(e);
 	}
-	clientMessage("[Schematic] The latest version.");
+	clientMessage("  # The latest version.");
 }
