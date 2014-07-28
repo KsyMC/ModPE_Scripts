@@ -495,8 +495,8 @@ NBTOutputStream.prototype = {
  * By KsyMC
  */
 
-const VERSION = 4;
-const VERSON_NAME = "1.2.1 BETA";
+const VERSION = 5;
+const VERSON_NAME = "2.0 BETA";
 
 var delay = 50;
 var selections = {};
