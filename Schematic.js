@@ -683,8 +683,8 @@ function export_schematic(filename) {
 				var ty = copyBlocks['StartY'] + y;
 				var tz = copyBlocks['StartZ'] + z;
 
-				var id = getTile(tx, ty, tz) & 0xFF;
-				var damage = Level.getData(tx, ty, tz) & 0xFF;
+				var id = getTile(tx, ty, tz);
+				var damage = Level.getData(tx, ty, tz);
 
 				var index = y * width * length + z * width + x;
 				blocks[index] = id;
@@ -744,7 +744,7 @@ function paste(startX, startY, startZ) {
 				for(var z = 0; z < length; z++) {
 				for(var x = 0; x < width; x++) {
 					var index = y * width * length + z * width + x;
-					var id = schematic['Blocks'][index];
+					var id = schematic['Blocks'][index] & 0xFF;
 					var damage = schematic['Data'][index];
 					if (id != 0) {
 						var tx = x + startX;
@@ -752,7 +752,7 @@ function paste(startX, startY, startZ) {
 						var tz = z + startZ;
 
 						setTile(tx, ty, tz, id, damage);
-						clientMessage("Pasteing ... " + parseInt((index / size) * 100, 10) + " %"
+						clientMessage("Pasting ... " + parseInt((index / size) * 100, 10) + " %"
 						+ "\n  # X "  + tx + ", Y " + ty + ", Z " + tz + ", Block : " + id + ":" + damage);
 						java.lang.Thread.sleep(delay);
 					}
@@ -788,7 +788,6 @@ function checkUpdate() {
 		}
 	} catch (e) {
 		clientMessage("  # You are not connected to the Internet!");
-		clientMessage(e);
 	}
 	clientMessage("  # The latest version.");
 }
