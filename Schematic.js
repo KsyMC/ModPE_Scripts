@@ -495,7 +495,7 @@ NBTOutputStream.prototype = {
  * By KsyMC
  */
 
-const VERSON = "2.2";
+const VERSON = "2.2.1";
 
 var delay = 50;
 var selections = {};
@@ -680,6 +680,7 @@ function export_schematic(filename) {
 			nos.writeTag(new CompoundTag("Schematic", tagMap));
 			nos.close();
 			clientMessage("Done.");
+			clientMessage("File :\n  # " + file.getAbsolutePath());
 		} catch (err) {
 			clientMessage("Failed to export blocks.\n  # " + err);
 		}
