@@ -18,7 +18,7 @@ function newLevel() {
 	Block.setShape(blockId, 0, 0, 0, 0, 0, 0);
 	Block.setLightLevel(blockId, 15);
 
-	clientMessage("# DynamicLight " + VERSION + "\n# By KsyMC\n# ksy4362@naver.com");
+	clientMessage("# DynamicLight " + VERSION + " By KsyMC");
 }
 
 function leaveGame() {

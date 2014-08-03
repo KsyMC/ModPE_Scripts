@@ -529,7 +529,7 @@ function newLevel() {
 	if (!file.exists()) {
 		file.mkdirs();
 	}
-	clientMessage("# Schematic " + VERSON + "\n# By KsyMC\n# ksy4362@naver.com");
+	clientMessage("# Schematic " + VERSION + " By KsyMC");
 }
 
 function procCmd(str) {
