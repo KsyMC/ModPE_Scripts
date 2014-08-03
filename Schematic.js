@@ -495,8 +495,7 @@ NBTOutputStream.prototype = {
  * By KsyMC
  */
 
-const VERSION = 8;
-const VERSON_NAME = "2.1 BETA";
+const VERSON = "2.2";
 
 var delay = 50;
 var selections = {};
@@ -531,8 +530,6 @@ function newLevel() {
 		file.mkdirs();
 	}
 	clientMessage("# Schematic " + VERSON_NAME + "\n# By KsyMC\n# ksy4362@naver.com");
-	clientMessage("[Schematic] Checking for updates ...");
-	checkUpdate();
 }
 
 function procCmd(str) {
@@ -735,31 +732,4 @@ function paste(startX, startY, startZ) {
 			clientMessage("Done.");
 		}})).start();
 	}
-}
-
-function checkUpdate() {
-	try {
-		var url = new java.net.URL("https://gist.github.com/KsyMC/7543740/raw/VERSION");
-		var br = new java.io.BufferedReader(new java.io.InputStreamReader(url.openConnection().getInputStream()));
-		var json = br.readLine();
-		br.close();
-
-		if (json !== null) {
-			var jsonObject = new org.json.JSONObject(json);
-			var scheObject = jsonObject.getJSONObject("schematic");
-			var version = scheObject.getInt("version");
-			if (version > VERSION) {
-				var name = scheObject.getString("name");
-				var logArray = scheObject.getJSONArray("changelog").getString(version).split("\n");
-				clientMessage("  # The new version : " + name + " (" + version + ")");
-				for (var i in logArray) {
-					clientMessage("  # " + logArray[i]);
-				}
-				return;
-			}
-		}
-	} catch (e) {
-		clientMessage("  # You are not connected to the Internet!");
-	}
-	clientMessage("  # The latest version.");
 }
