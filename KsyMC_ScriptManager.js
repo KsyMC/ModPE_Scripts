@@ -99,8 +99,8 @@ Script.prototype = {
 				buf.flush();
 				buf.close();
 
+				ScriptManager.setEnabled(file, true);
 				if (this.code != CODE) {
-					ScriptManager.setEnabled(file, true);
 					scriptVersion.put(this.code, {
 						"name" : this.name,
 						"version" : this.version,
@@ -117,8 +117,8 @@ Script.prototype = {
 			} catch (e) {
 				showPopupWindow(WINDOW_CRASH, e, "인터넷에 연결되어 있나요?");
 			}
-			return false;
 		}
+		return false;
 	},
 	unInstall : function() {
 		if (this.isExists() || this.code == CODE) {
@@ -143,8 +143,8 @@ Script.prototype = {
 			} catch (e) {
 				showPopupWindow(WINDOW_CRASH, e, "\"삭제가 안되다니...\"");
 			}
-			return false;
 		}
+		return false;
 	}
 };
 
@@ -518,7 +518,7 @@ function createWindow(type) {
 							function(v) {
 								scriptWindow.dismiss();
 								alertWindow.dismiss();
-								scriptUpdate(args[5]);
+								scriptUpdate(args[5], false);
 							}
 						);
 					}
@@ -682,7 +682,7 @@ function sendCrash(e, message) {
 	})).start();
 }
 
-function scriptUpdate(script) {
+function scriptUpdate(script, restart) {
 	runOnUiThread(function() {
 		var dialog = ProgressDialog("업데이트가 완료될 때까지 기다려주세요!", false, STYLE_SPINNER);
 		dialog.show();
@@ -695,6 +695,12 @@ function scriptUpdate(script) {
 			runOnUiThread(function() {
 				tabManager(TAB_DOWNLOAD);
 				dialog.dismiss();
+				if (restart) {
+					runOnNewThread(function() {
+						java.lang.Thread.sleep(3000);
+						context.finish();//java.lang.System.exit(0);
+					});
+				}
 			});
 		});
 	});
@@ -851,22 +857,8 @@ function loadData() {
 					scriptInfo.getString("desc")
 				);
 				scriptList.put(code, script);
-
-				if (code == CODE && script.versionCode > VERSION_CODE) {
-					var text =
-					   "ScriptManager를 업데이트 해야 합니다!"
-					+ "\n- " + script.version + "의 새로운 기능 -"
-					+ "\n" + script.changelog[script.versionCode]
-					+ "\n"
-					+ "\n업데이트 하시겠습니까?";
-					showPopupWindow(WINDOW_ALERT, "Update - ScriptManager", text, "Update",
-						function(v) {
-							alertWindow.dismiss();
-							scriptUpdate(script);
-						}
-					);
-				}
 			}
+			versionCheck();
 		} catch (e) {
 			offlineMode = true;
 			showPopupWindow(WINDOW_ALERT, "Offline mode", "오프라인으로 계속 작업하실 수 있습니다.");
@@ -909,6 +901,25 @@ function saveData() {
 		bfw.flush();
 		bfw.close();
 	} catch (e) {}
+}
+
+function versionCheck() {
+	var script = scriptList.get(CODE);
+	if (script.versionCode > VERSION_CODE) {
+		var text =
+		   "ScriptManager를 업데이트 해야 합니다!"
+		+ "\n- " + script.version + "의 새로운 기능 -"
+		+ "\n" + script.changelog[script.versionCode]
+		+ "\n"
+		+ "\n업데이트 하시겠습니까? 완료후 재실행 해주세요.";
+		showPopupWindow(WINDOW_ALERT, "Update - ScriptManager", text, "Update",
+			function(v) {
+				btnWindow.dismiss();
+				alertWindow.dismiss();
+				scriptUpdate(script, true);
+			}
+		);
+	}
 }
 
 function newLevel() {
