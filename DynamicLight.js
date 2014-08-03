@@ -3,7 +3,7 @@
 // ksy4362@naver.com
 //
 
-const VERSION = "1.0.0";
+const VERSION = "1.0.1";
 const blockId = 52;
 const brighness = 7;
 const distance = 2;
