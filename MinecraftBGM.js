@@ -3,7 +3,7 @@
 // ksy4362@naver.com
 //
 
-const VERSION = "1.0.1";
+const VERSION = "1.0.2";
 var mPlayer = null;
 var nowplaying = null;
 var jukebox = [];
@@ -90,7 +90,15 @@ function useItem(x, y, z, item, block, side, itemdata, blockdata){
 		}
 	}
 }
- 
+
+function destroyBlock(x, y, z, side) {
+	if (getTile(x, y, z) == 84 && jukebox[x+","+y+","+z] != false) {
+		if(mPlayer.isPlaying()) mPlayer.pause();
+		Level.dropItem(x, y + 1, z, 0, jukebox[x+","+y+","+z], 1, 0);
+		jukebox[x+","+y+","+z] = false;
+	}
+}
+
 function leaveGame(){
 	var ctx = com.mojang.minecraftpe.MainActivity.currentMainActivity.get();
 	ctx.runOnUiThread(new java.lang.Runnable({
@@ -108,7 +116,7 @@ function leaveGame(){
 	
 	jukebox = [];
 }
- 
+
 function modTick(){
 	if(nowplaying != null){
 		saveTick--;
@@ -132,7 +140,7 @@ function modTick(){
 	if(time >= 7200 && time <= 8280) playSound(sounds[0]);
 	else if(time >= 4000 && time <= 5000) playSound(getRandomSound(0));
 }
- 
+
 function showNowPlaying(title){
 	var ctx = com.mojang.minecraftpe.MainActivity.currentMainActivity.get();
 	ctx.runOnUiThread(new java.lang.Runnable({
@@ -158,12 +166,12 @@ function showNowPlaying(title){
 		}
 	}));
 }
- 
+
 function getRandomSound(type){
 	if(type == 0) return sounds[parseInt(Math.random() * 12)];
 	if(type == 1) return jukebox_sounds[parseInt(Math.random() * 12)];
 }
- 
+
 function playSound(sndname){
 	var path = sdcardPath+"/games/com.mojang/minecraftResources/ScriptManager/musics/" + sndname;
 	try{
@@ -178,7 +186,7 @@ function playSound(sndname){
 		print("error: playsound (163 line)\n"+err);
 	}
 }
- 
+
 function dip2px(ctx, dips){
  return Math.ceil(dips * ctx.getResources().getDisplayMetrics().density);
 }
