@@ -309,7 +309,7 @@ function init() {
 		runOnNewThread(function() {
 			try {
 				newsHTML = getStringFromURL(new java.net.URL("https://gist.github.com/KsyMC/7543740/raw/NEWS"));
-				var jsonString = getStringFromURL(new java.net.URL("https://gist.github.com/KsyMC/7543740/raw/TEST"));
+				var jsonString = getStringFromURL(new java.net.URL("https://gist.github.com/KsyMC/7543740/raw/SCRIPT"));
 
 				var mainArray = new org.json.JSONArray(jsonString);
 				for (var code = 0; code < mainArray.length(); code++) {
