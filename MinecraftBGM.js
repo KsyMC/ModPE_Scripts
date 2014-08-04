@@ -40,10 +40,8 @@ var jukebox_sounds =
  "wait.ogg"];
  
 var jukebox_name = ["13", "cat", "blocks", "chirp", "far", "mall", "mellohi", "stal", "strad", "ward", "11", "wait"];
- 
-function selectLevelHook(){
-	mPlayer = new android.media.MediaPlayer();
-	
+
+function init() {
 	ModPE.setItem(422, "record_13", 0, "13 disc", 1);
 	ModPE.setItem(423, "record_cat", 0, "cat disc", 1);
 	ModPE.setItem(424, "record_blocks", 0, "blocks disc", 1);
@@ -56,7 +54,7 @@ function selectLevelHook(){
 	ModPE.setItem(431, "record_ward", 9, "ward disc", 1);
 	ModPE.setItem(432, "record_11", 0, "11 disc", 1);
 	ModPE.setItem(433, "record_wait", 0, "wait disc", 1);
-	
+
 	Block.defineBlock(84, "Jukebox", [["jukebox_side", 0], ["jukebox_top", 0], ["jukebox_side", 0], ], 3, false, 10);
 	Block.setDestroyTime(84, 1);
 
@@ -64,6 +62,11 @@ function selectLevelHook(){
 	for (var i = 422; i <= 433; i++) {
 		Player.addItemCreativeInv(i, 1, 0);
 	}
+}
+init();
+
+function selectLevelHook(){
+	mPlayer = new android.media.MediaPlayer();
 }
 
 function newLevel() {
