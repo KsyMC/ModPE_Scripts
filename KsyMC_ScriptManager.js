@@ -1,3 +1,8 @@
+//
+// 무단 배포 금지
+// ksy4362@naver.com
+//
+
 var context = com.mojang.minecraftpe.MainActivity.currentMainActivity.get();
 var contextBL = net.zhuoweizhang.mcpelauncher.ScriptManager.androidContext;
 
@@ -8,10 +13,11 @@ var resPath = sdcardPath + "/games/com.mojang/minecraftResources/ScriptManager/"
 var newsHTML = "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0\"></head><body><h3>오프라인 모드</h3><hr><p style=\"text-align: center\">제조일자(KsyMC) <a href=\"mailto:ksy4362@naver.com\">ksy4362@naver.com</a><br>MDS - Minecraft Dev Space <a href=\"http://cafe.naver.com/minecraftdev\">http://cafe.naver.com/minecraftdev</a></p></body></html>";
 
 const CODE = 0;
-const VERSION_CODE = 0;
-const VERSION = "1.0.0 Alpha";
+const VERSION_CODE = 1;
+const VERSION = "1.1 Alpha";
 
 const SCRIPT_URL = "https%3A%2F%2Fraw.github.com%2FKsyMC%2Fmodpe_scripts%2Fmaster%2F";
+const DATA_URL = SCRIPT_URL + "data%2F";
 const CRASH_URL = "https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2F1LileGpXDo6cFbPgycedFST7cByXC_ZtFpZ38sP6nHh8%2FformResponse%3Fentry.744513758%3D";
 
 const HORIZONTAL = 0;
@@ -73,10 +79,10 @@ Map.prototype = {
 	}
 };
 
-function Script(code, name, version, versionCode, changelog, filename, desc) {
+function Script(code, name, version, versionCode, changelog, filename, desc, dataFiles) {
 	this.code = code; this.name = name; this.version = version;
 	this.versionCode = versionCode; this.changelog = changelog;
-	this.filename = filename; this.desc = desc;
+	this.filename = filename; this.desc = desc; this.dataFiles = dataFiles;
 }
 Script.prototype = {
 	isExists : function() {
@@ -89,7 +95,7 @@ Script.prototype = {
 		}
 		return false;
 	},
-	install : function() {
+	install : function(dialog) {
 		if (!this.isExists() || this.code == CODE) {
 			try {
 				var source = getStringFromURL(new java.net.URL(decodeURIComponent(SCRIPT_URL) + this.filename));
@@ -98,6 +104,10 @@ Script.prototype = {
 				buf.write(source.getBytes(java.nio.charset.Charset.forName("UTF-8")));
 				buf.flush();
 				buf.close();
+
+				if (this.dataFiles.length > 0) {
+					this.installData(dialog);
+				}
 
 				ScriptManager.setEnabled(file, true);
 				if (this.code != CODE) {
@@ -111,6 +121,7 @@ Script.prototype = {
 				}
 
 				runOnUiThread(function() {
+					dialog.setProgress(100);
 					Toast("설치를 완료하였습니다.").show();
 				});
 				return true;
@@ -125,6 +136,10 @@ Script.prototype = {
 			try {
 				var file = ScriptManager.getScriptFile(this.filename);
 				if (file.delete()) {
+					if (this.dataFiles.length > 0) {
+						this.unInstallData();
+					}
+
 					ScriptManager.setEnabled(file, false);
 					if (this.code != CODE) {
 						scriptVersion.remove(this.code);
@@ -145,6 +160,31 @@ Script.prototype = {
 			}
 		}
 		return false;
+	},
+	installData : function(dialog) {
+		for (var i in this.dataFiles) {
+			var path = this.dataFiles[i];
+			var count = (parseInt(i, 10) + 1) + "/" + this.dataFiles.length;
+			var file = new java.io.File(resPath, path);
+			file.getParentFile().mkdirs();
+
+			runOnUiThread(function() {
+				dialog.setMessage("잠시만 기다려 주세요. " + count + "\n\n" + path);
+			});
+			var url = new java.net.URL(decodeURIComponent(DATA_URL) + path);
+			fileDownload(url, file.getAbsolutePath(), dialog);
+		}
+
+		runOnUiThread(function() {
+			Toast("데이터 설치를 완료하였습니다.").show();
+		});
+	},
+	unInstallData : function() {
+		for (var i in this.dataFiles) {
+			var path = this.dataFiles[i];
+			var file = new java.io.File(resPath, path);
+			file.delete();
+		}
 	}
 };
 
@@ -496,13 +536,13 @@ function createWindow(type) {
 			Button(buttonLayout, text, 17, [MATCH_PARENT, MATCH_PARENT, 1], getColor(255, BUTTON_COLOR), true, Gravity.CENTER,
 				function(v) {
 					scriptWindow.dismiss();
-					var dialog = ProgressDialog("설치 또는 제거가 완료될 때까지 기다려주세요!", false, STYLE_SPINNER);
+					var dialog = ProgressDialog("설치 또는 제거가 완료될 때까지 기다려주세요!", false, STYLE_HORIZONTAL);
 					dialog.show();
 					runOnNewThread(function() {
 						if (args[3]) {
 							args[5].unInstall();
 						} else {
-							args[5].install();
+							args[5].install(dialog);
 						}
 						runOnUiThread(function() {
 							tabManager(TAB_DOWNLOAD);
@@ -767,6 +807,17 @@ function getStringFromURL(url) {
 	return buffer.toString();
 }
 
+function getStringFromFile(path) {
+	var bfr = new java.io.BufferedReader(new java.io.FileReader(path));
+	var buffer = new java.lang.StringBuffer();
+	var line;
+	while ((line = bfr.readLine()) != null) {
+		buffer.append(line);
+	}
+	bfr.close();
+	return buffer.toString();
+}
+
 function fileDownload(url, outputPath, dialog) {
 	var conn = url.openConnection();
 	conn.connect();
@@ -806,15 +857,8 @@ function showingWindowCount() {
 function loadData() {
 	if (new java.io.File(savePath).exists()) {
 		try {
-			var bfr = new java.io.BufferedReader(new java.io.FileReader(savePath));
-			var buffer = new java.lang.StringBuffer();
-			var line;
-			while ((line = bfr.readLine()) != null) {
-				buffer.append(line);
-			}
-			bfr.close();
-
-			var dataObject = new org.json.JSONObject(buffer.toString());
+			var data = getStringFromFile(savePath);
+			var dataObject = new org.json.JSONObject(data);
 			var versionArray = dataObject.getJSONArray("version");
 			for (var i = 0; i < versionArray.length(); i++) {
 				var versionObject = versionArray.getJSONObject(i);
@@ -847,6 +891,11 @@ function loadData() {
 				for (var i = 0; i < logArray.length(); i++) {
 					changelog.push(logArray.getString(i));
 				}
+				var dataFiles = [];
+				var fileArray = scriptInfo.getJSONArray("data_file");
+				for (var i = 0; i < fileArray.length(); i++) {
+					dataFiles.push(fileArray.getString(i));
+				}
 				var script = new Script(
 					code,
 					scriptInfo.getString("name"),
@@ -854,7 +903,8 @@ function loadData() {
 					scriptInfo.getInt("version_code"),
 					changelog,
 					scriptInfo.getString("file_name"),
-					scriptInfo.getString("desc")
+					scriptInfo.getString("desc"),
+					dataFiles
 				);
 				scriptList.put(code, script);
 			}
