@@ -98,16 +98,16 @@ Script.prototype = {
 	install : function(dialog) {
 		if (!this.isExists() || this.code == CODE) {
 			try {
+				if (this.dataFiles.length > 0) {
+					this.installData(dialog);
+				}
+
 				var source = getStringFromURL(new java.net.URL(decodeURIComponent(SCRIPT_URL) + this.filename));
 				var file = ScriptManager.getScriptFile(this.filename);
 				var buf = new java.io.BufferedOutputStream(new java.io.FileOutputStream(file));
 				buf.write(source.getBytes(java.nio.charset.Charset.forName("UTF-8")));
 				buf.flush();
 				buf.close();
-
-				if (this.dataFiles.length > 0) {
-					this.installData(dialog);
-				}
 
 				ScriptManager.setEnabled(file, true);
 				if (this.code != CODE) {
@@ -119,11 +119,6 @@ Script.prototype = {
 					});
 					saveData();
 				}
-
-				runOnUiThread(function() {
-					dialog.setProgress(100);
-					Toast("설치를 완료하였습니다.").show();
-				});
 				return true;
 			} catch (e) {
 				showPopupWindow(WINDOW_CRASH, e, "인터넷에 연결되어 있나요?");
@@ -131,12 +126,12 @@ Script.prototype = {
 		}
 		return false;
 	},
-	unInstall : function() {
+	unInstall : function(update) {
 		if (this.isExists() || this.code == CODE) {
 			try {
 				var file = ScriptManager.getScriptFile(this.filename);
 				if (file.delete()) {
-					if (this.dataFiles.length > 0) {
+					if (this.dataFiles.length > 0 && !update) {
 						this.unInstallData();
 					}
 
@@ -145,15 +140,7 @@ Script.prototype = {
 						scriptVersion.remove(this.code);
 						saveData();
 					}
-
-					runOnUiThread(function() {
-						Toast("삭제 하였습니다.").show();
-					});
 					return true;
-				} else {
-					runOnUiThread(function() {
-						Toast("삭제하지 못했습니다.").show();
-					});
 				}
 			} catch (e) {
 				showPopupWindow(WINDOW_CRASH, e, "\"삭제가 안되다니...\"");
@@ -163,28 +150,29 @@ Script.prototype = {
 	},
 	installData : function(dialog) {
 		for (var i in this.dataFiles) {
-			var path = this.dataFiles[i];
+			var fileData = this.dataFiles[i];
 			var count = (parseInt(i, 10) + 1) + "/" + this.dataFiles.length;
-			var file = new java.io.File(resPath, path);
-			file.getParentFile().mkdirs();
+			var file = new java.io.File(resPath, fileData['filepath']);
+			if (!file.exists() || file.length() != fileData['length']) {
+				file.getParentFile().mkdirs();
 
-			runOnUiThread(function() {
-				dialog.setMessage("잠시만 기다려 주세요. " + count + "\n\n" + path);
-			});
-			var url = new java.net.URL(decodeURIComponent(DATA_URL) + path);
-			fileDownload(url, file.getAbsolutePath(), dialog);
+				runOnUiThread(function() {
+					dialog.setMessage("잠시만 기다려 주세요. " + count + "\n\n" + fileData['filepath']);
+				});
+				var url = new java.net.URL(decodeURIComponent(DATA_URL) + fileData['filepath']);
+				fileDownload(url, file.getAbsolutePath(), dialog);
+			}
 		}
-
-		runOnUiThread(function() {
-			Toast("데이터 설치를 완료하였습니다.").show();
-		});
 	},
 	unInstallData : function() {
 		for (var i in this.dataFiles) {
-			var path = this.dataFiles[i];
-			var file = new java.io.File(resPath, path);
+			var fileData = this.dataFiles[i];
+			var file = new java.io.File(resPath, fileData['filepath']);
 			file.delete();
 		}
+	},
+	update : function(dialog) {
+		return this.unInstall(true) && this.install(dialog);
 	}
 };
 
@@ -293,65 +281,86 @@ function init() {
 	scriptList = new Map();
 
 	new java.io.File(resPath).mkdirs();
+	if (new java.io.File(savePath).exists()) {
+		try {
+			var data = getStringFromFile(savePath);
+			var dataObject = new org.json.JSONObject(data);
+			var versionArray = dataObject.getJSONArray("version");
+			for (var i = 0; i < versionArray.length(); i++) {
+				var versionObject = versionArray.getJSONObject(i);
+				var code = versionObject.getInt("code");
+				scriptVersion.put(code, {
+					"name" : versionObject.getString("name"),
+					"version" : versionObject.getString("version"),
+					"file_name" : versionObject.getString("file_name"),
+					"version_code" : versionObject.getInt("version_code")
+				});
+			}
+			var optionObject = dataObject.getJSONObject("options");
+			hiddenButton = optionObject.getBoolean("hidden_button");
+		} catch (e) {
+			showPopupWindow(WINDOW_CRASH, e, "저장된 데이터 로딩중 에러입니다.");
+			return;
+		}
+	}
+
 	runOnUiThread(function() {
 		var dialog = ProgressDialog("데이터 확인중 ...", false, STYLE_HORIZONTAL);
-		dialog.show();
-		dataCheck(dialog);
+		runOnNewThread(function() {
+			try {
+				newsHTML = getStringFromURL(new java.net.URL("https://gist.github.com/KsyMC/7543740/raw/NEWS"));
+				var jsonString = getStringFromURL(new java.net.URL("https://gist.github.com/KsyMC/7543740/raw/TEST"));
+
+				var mainArray = new org.json.JSONArray(jsonString);
+				for (var code = 0; code < mainArray.length(); code++) {
+					var scriptInfo = mainArray.getJSONObject(code);
+
+					var changelog = [];
+					var logArray = scriptInfo.getJSONArray("changelog");
+					for (var i = 0; i < logArray.length(); i++) {
+						changelog.push(logArray.getString(i));
+					}
+					var dataFiles = [];
+					var fileArray = scriptInfo.getJSONArray("data_file");
+					for (var i = 0; i < fileArray.length(); i++) {
+						var fileData = fileArray.getJSONObject(i);
+						dataFiles.push({
+							"filepath" : fileData.getString("filepath"),
+							"length" : fileData.getLong("length")
+						});
+					}
+					var script = new Script(
+						code,
+						scriptInfo.getString("name"),
+						scriptInfo.getString("version"),
+						scriptInfo.getInt("version_code"),
+						changelog,
+						scriptInfo.getString("file_name"),
+						scriptInfo.getString("desc"),
+						dataFiles
+					);
+					scriptList.put(code, script);
+				}
+				dataCheck(dialog);
+
+				runOnUiThread(function() {
+					dialog.setMessage("업데이트 중 ...");
+				});
+				versionCheck(dialog);
+			} catch (e) {
+				offlineMode = true;
+				showPopupWindow(WINDOW_ALERT, "Offline mode", "오프라인으로 계속 작업하실 수 있습니다.");
+				showPopupWindow(WINDOW_CRASH, e, "인터넷이 연결되었는지 확인해 주세요.");
+			}
+			initialized = true;
+		});
 	});
+
+	btnWindow = createWindow(WINDOW_BUTTON);
+	mainWindow = createWindow(WINDOW_MAIN);
+	showPopupWindow(WINDOW_BUTTON);
 }
 init();
-
-function dataCheck(dialog) {
-	var fontLight = new java.io.File(resPath, "fonts/SourceHanSans-Light.otf");
-	var fontMedium = new java.io.File(resPath, "fonts/SourceHanSans-Medium.otf");
-	var fontNormal = new java.io.File(resPath, "fonts/SourceHanSans-Normal.otf");
-	var imageKsyMC = new java.io.File(resPath, "images/ksymc.png");
-
-	if (!fontLight.exists() || fontLight.length() != 16375136) {
-		dialog.setMessage("잠시만 기다려 주세요.\n\nfonts/SourceHanSans-Light.otf");
-		runOnNewThread(function() {
-			fontLight.getParentFile().mkdirs();
-			var url = new java.net.URL(decodeURIComponent("https%3A%2F%2Fraw.github.com%2FKsyMC%2Fmodpe_scripts%2Fmaster%2Fdata%2Ffonts%2FSourceHanSans-Light.otf"));
-			fileDownload(url, fontLight.getAbsolutePath(), dialog);
-			runOnUiThread(function() {
-				dataCheck(dialog);
-			});
-		});
-	} else if (!fontMedium.exists() || fontMedium.length() != 16638968) {
-		dialog.setMessage("잠시만 기다려 주세요.\n\nfonts/SourceHanSans-Medium.otf");
-		runOnNewThread(function() {
-			fontMedium.getParentFile().mkdirs();
-			var url = new java.net.URL(decodeURIComponent("https%3A%2F%2Fraw.github.com%2FKsyMC%2Fmodpe_scripts%2Fmaster%2Fdata%2Ffonts%2FSourceHanSans-Medium.otf"));
-			fileDownload(url, fontMedium.getAbsolutePath(), dialog);
-			runOnUiThread(function() {
-				dataCheck(dialog);
-			});
-		});
-	} else if (!fontNormal.exists() || fontNormal.length() != 16504820) {
-		dialog.setMessage("잠시만 기다려 주세요.\n\nfonts/SourceHanSans-Normal.otf");
-		runOnNewThread(function() {
-			fontNormal.getParentFile().mkdirs();
-			var url = new java.net.URL(decodeURIComponent("https%3A%2F%2Fraw.github.com%2FKsyMC%2Fmodpe_scripts%2Fmaster%2Fdata%2Ffonts%2FSourceHanSans-Normal.otf"));
-			fileDownload(url, fontNormal.getAbsolutePath(), dialog);
-			runOnUiThread(function() {
-				dataCheck(dialog);
-			});
-		});
-	} else if (!imageKsyMC.exists() || imageKsyMC.length() != 489) {
-		dialog.setMessage("잠시만 기다려 주세요.\n\nimages/ksymc.png");
-		runOnNewThread(function() {
-			imageKsyMC.getParentFile().mkdirs();
-			var url = new java.net.URL(decodeURIComponent("https%3A%2F%2Fraw.github.com%2FKsyMC%2Fmodpe_scripts%2Fmaster%2Fdata%2Fimages%2Fksymc.png"));
-			fileDownload(url, imageKsyMC.getAbsolutePath(), dialog);
-			runOnUiThread(function() {
-				dataCheck(dialog);
-			});
-		});
-	} else {
-		dialog.dismiss();
-		loadData();
-	}
-}
 
 function showScriptInfoDialog(script) {
 	var versionData = scriptVersion.get(script.code);
@@ -539,12 +548,15 @@ function createWindow(type) {
 					var dialog = ProgressDialog("설치 또는 제거가 완료될 때까지 기다려주세요!", false, STYLE_HORIZONTAL);
 					dialog.show();
 					runOnNewThread(function() {
+						var result;
 						if (args[3]) {
-							args[5].unInstall();
+							result = args[5].unInstall(false);
 						} else {
-							args[5].install(dialog);
+							result = args[5].install(dialog);
 						}
 						runOnUiThread(function() {
+							if (result) Toast("완료 되었습니다.").show();
+							else Toast("실패하였습니다.").show();
 							tabManager(TAB_DOWNLOAD);
 							dialog.dismiss();
 						});
@@ -558,7 +570,17 @@ function createWindow(type) {
 							function(v) {
 								scriptWindow.dismiss();
 								alertWindow.dismiss();
-								scriptUpdate(args[5], false);
+								var dialog = ProgressDialog("업데이트가 완료될 때까지 기다려주세요!", false, STYLE_HORIZONTAL);
+								dialog.show();
+								runOnNewThread(function() {
+									var result = args[5].update(dialog);
+									runOnUiThread(function() {
+										if (result) Toast("업데이트를 완료하였습니다.").show();
+										else Toast("업데이트에 실패하였습니다.").show();
+										tabManager(TAB_DOWNLOAD);
+										dialog.dismiss();
+									});
+								});
 							}
 						);
 					}
@@ -622,7 +644,7 @@ function addLayoutTitle(layout, title, type, exitListener) {
 	var titleLayout = LinearLayout(layout, HORIZONTAL, [MATCH_PARENT, WRAP_CONTENT, 0], getColor(255, TITLE_COLOR));
 	Corner(titleLayout, [20, 20, 20, 20, 0, 0, 0, 0]);
 	var logo = ImageView(titleLayout, "ksymc.png", 70, 70, ScaleType.FIT_CENTER, [WRAP_CONTENT, MATCH_PARENT, 0]);
-	logo.setPadding(30, 5, 5, 5);
+	if (logo !== null) logo.setPadding(30, 5, 5, 5);
 	TextView(titleLayout, title, 18, [MATCH_PARENT, MATCH_PARENT, 1], getColor(255, WHITE), true, Gravity.CENTER);
 	Button(titleLayout, "X", 23, [WRAP_CONTENT, WRAP_CONTENT, 0], NO_COLOR, true, Gravity.CENTER,
 		function(v) {
@@ -678,8 +700,10 @@ function addOfflineScriptButton(layout, script) {
 			showPopupWindow(WINDOW_ALERT, "Delete Script", "삭제 하시겠습니까?", "Yes",
 				function(v) {
 					runOnNewThread(function() {
-						script.unInstall();
+						var result = script.unInstall(false);
 						runOnUiThread(function() {
+							if (result) Toast("삭제 하였습니다.").show();
+							else Toast("삭제 하지 못했습니다.").show();
 							alertWindow.dismiss();
 							tabManager(TAB_DOWNLOAD);
 						});
@@ -720,30 +744,6 @@ function sendCrash(e, message) {
 			});
 		}
 	})).start();
-}
-
-function scriptUpdate(script, restart) {
-	runOnUiThread(function() {
-		var dialog = ProgressDialog("업데이트가 완료될 때까지 기다려주세요!", false, STYLE_SPINNER);
-		dialog.show();
-		runOnNewThread(function() {
-			if (script.unInstall() && script.install()) {
-				runOnUiThread(function() {
-					Toast("업데이트를 완료하였습니다.").show();
-				});
-			}
-			runOnUiThread(function() {
-				tabManager(TAB_DOWNLOAD);
-				dialog.dismiss();
-				if (restart) {
-					runOnNewThread(function() {
-						java.lang.Thread.sleep(3000);
-						context.finish();//java.lang.System.exit(0);
-					});
-				}
-			});
-		});
-	});
 }
 
 function tabManager(type) {
@@ -854,75 +854,6 @@ function showingWindowCount() {
 	return count;
 }
 
-function loadData() {
-	if (new java.io.File(savePath).exists()) {
-		try {
-			var data = getStringFromFile(savePath);
-			var dataObject = new org.json.JSONObject(data);
-			var versionArray = dataObject.getJSONArray("version");
-			for (var i = 0; i < versionArray.length(); i++) {
-				var versionObject = versionArray.getJSONObject(i);
-				var code = versionObject.getInt("code");
-				scriptVersion.put(code, {
-					"name" : versionObject.getString("name"),
-					"version" : versionObject.getString("version"),
-					"file_name" : versionObject.getString("file_name"),
-					"version_code" : versionObject.getInt("version_code")
-				});
-			}
-			var optionObject = dataObject.getJSONObject("options");
-			hiddenButton = optionObject.getBoolean("hidden_button");
-		} catch (e) {
-			showPopupWindow(WINDOW_CRASH, e, "저장된 데이터 로딩중 에러입니다.");
-			return;
-		}
-	}
-	runOnNewThread(function() {
-		try {
-			newsHTML = getStringFromURL(new java.net.URL("https://gist.github.com/KsyMC/7543740/raw/NEWS"));
-			var jsonString = getStringFromURL(new java.net.URL("https://gist.github.com/KsyMC/7543740/raw/SCRIPT"));
-
-			var mainArray = new org.json.JSONArray(jsonString);
-			for (var code = 0; code < mainArray.length(); code++) {
-				var scriptInfo = mainArray.getJSONObject(code);
-
-				var changelog = [];
-				var logArray = scriptInfo.getJSONArray("changelog");
-				for (var i = 0; i < logArray.length(); i++) {
-					changelog.push(logArray.getString(i));
-				}
-				var dataFiles = [];
-				var fileArray = scriptInfo.getJSONArray("data_file");
-				for (var i = 0; i < fileArray.length(); i++) {
-					dataFiles.push(fileArray.getString(i));
-				}
-				var script = new Script(
-					code,
-					scriptInfo.getString("name"),
-					scriptInfo.getString("version"),
-					scriptInfo.getInt("version_code"),
-					changelog,
-					scriptInfo.getString("file_name"),
-					scriptInfo.getString("desc"),
-					dataFiles
-				);
-				scriptList.put(code, script);
-			}
-			versionCheck();
-		} catch (e) {
-			offlineMode = true;
-			showPopupWindow(WINDOW_ALERT, "Offline mode", "오프라인으로 계속 작업하실 수 있습니다.");
-			showPopupWindow(WINDOW_CRASH, e, "인터넷이 연결되었는지 확인해 주세요.");
-		}
-		initialized = true;
-	});
-
-	btnWindow = createWindow(WINDOW_BUTTON);
-	mainWindow = createWindow(WINDOW_MAIN);
-
-	showPopupWindow(WINDOW_BUTTON);
-}
-
 function saveData() {
 	try {
 		var jsonStringer = new org.json.JSONStringer();
@@ -953,7 +884,39 @@ function saveData() {
 	} catch (e) {}
 }
 
-function versionCheck() {
+function dataCheck(dialog) {
+	runOnUiThread(function() {
+		dialog.show();
+	});
+
+	scriptList.get(CODE).installData(dialog);
+	runOnUiThread(function() {
+		Toast("데이터 체크 완료.").show();
+		dialog.dismiss();
+	});
+}
+
+function versionCheck(dialog) {
+	function update(v) {
+		runOnUiThread(function() {
+			dialog.show();
+		});
+
+		btnWindow.dismiss();
+		alertWindow.dismiss();
+		runOnNewThread(function() {
+			var result = script.update(dialog);
+			runOnUiThread(function() {
+				if (result) Toast("업데이트를 완료하였습니다.").show();
+				else Toast("업데이트에 실패하였습니다.").show();
+				dialog.dismiss();
+			});
+
+			java.lang.Thread.sleep(2000);
+			context.finish();//java.lang.System.exit(0);
+		});
+	}
+
 	var script = scriptList.get(CODE);
 	if (script.versionCode > VERSION_CODE) {
 		var text =
@@ -962,13 +925,7 @@ function versionCheck() {
 		+ "\n" + script.changelog[script.versionCode]
 		+ "\n"
 		+ "\n업데이트 하시겠습니까? 완료후 재실행 해주세요.";
-		showPopupWindow(WINDOW_ALERT, "Update - ScriptManager", text, "Update",
-			function(v) {
-				btnWindow.dismiss();
-				alertWindow.dismiss();
-				scriptUpdate(script, true);
-			}
-		);
+		showPopupWindow(WINDOW_ALERT, "Update - ScriptManager", text, "Update", update);
 	}
 }
 
@@ -1069,13 +1026,16 @@ function EditText(layout, hint, text, params) {
 
 function ImageView(layout, filename, width, height, scaleType, params) {
 	var bitmap = android.graphics.BitmapFactory.decodeFile(resPath + "images/" + filename);
-	var bitmap = android.graphics.Bitmap.createScaledBitmap(bitmap, width, height, false);
-	var imageView = new android.widget.ImageView(context);
-	imageView.setImageBitmap(bitmap);
-	imageView.setScaleType(scaleType);
-	imageView.setLayoutParams(LayoutParams(params[0], params[1], params[2]));
-	if (layout !== null) layout.addView(imageView);
-	return imageView;
+	if (bitmap !== null) {
+		var bitmap = android.graphics.Bitmap.createScaledBitmap(bitmap, width, height, false);
+		var imageView = new android.widget.ImageView(context);
+		imageView.setImageBitmap(bitmap);
+		imageView.setScaleType(scaleType);
+		imageView.setLayoutParams(LayoutParams(params[0], params[1], params[2]));
+		if (layout !== null) layout.addView(imageView);
+		return imageView;
+	}
+	return null;
 }
 
 function ProgressDialog(message, cancelable, style) {
@@ -1088,11 +1048,17 @@ function ProgressDialog(message, cancelable, style) {
 }
 
 function Typeface(view, bold) {
-	var filename = "SourceHanSans-Light.otf";
-	if (bold) {
-		filename = "SourceHanSans-Normal.otf";
-	} 
-	view.setTypeface(android.graphics.Typeface.createFromFile(resPath + "fonts/" + filename));
+	try {
+		var filename = "SourceHanSans-Light.otf";
+		if (bold) {
+			filename = "SourceHanSans-Normal.otf";
+		} 
+		view.setTypeface(android.graphics.Typeface.createFromFile(resPath + "fonts/" + filename));
+	} catch (e) {
+		runOnUiThread(function() {
+			Toast("데이터 설치후 재시작 바랍니다.").show();
+		});
+	}
 }
 
 function Corner(view, radii) {
