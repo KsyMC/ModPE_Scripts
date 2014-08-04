@@ -3,6 +3,7 @@
 // ksy4362@naver.com
 //
 
+const VERSION = "1.0.1";
 var mPlayer = null;
 var nowplaying = null;
 var jukebox = [];
@@ -64,7 +65,11 @@ function selectLevelHook(){
 		Player.addItemCreativeInv(i, 1, 0);
 	}
 }
- 
+
+function newLevel() {
+	clientMessage("# Minecraft BGM " + VERSION + " By KsyMC");
+}
+
 function useItem(x, y, z, item, block, side, itemdata, blockdata){
 	if(block == 84){
 		if(jukebox[x+","+y+","+z] === undefined) jukebox[x+","+y+","+z] = false;
