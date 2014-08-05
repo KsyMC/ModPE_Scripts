@@ -495,7 +495,7 @@ NBTOutputStream.prototype = {
  * By KsyMC
  */
 
-const VERSION = "2.2.2";
+const VERSION = "2.3";
 
 var delay = 50;
 var selections = {};
@@ -711,22 +711,25 @@ function paste(startX, startY, startZ) {
 		new java.lang.Thread(new java.lang.Runnable({run: function() {
 			try {
 				for(var y = 0; y < height; y++) {
-				for(var z = 0; z < length; z++) {
-				for(var x = 0; x < width; x++) {
-					var index = y * width * length + z * width + x;
-					var id = schematic['Blocks'][index] & 0xFF;
-					var damage = schematic['Data'][index];
-					if (id != 0) {
-						var tx = x + startX;
-						var ty = y + startY;
-						var tz = z + startZ;
+					if (y > 127) break;
+					for(var z = 0; z < length; z++) {
+						for(var x = 0; x < width; x++) {
+							var index = y * width * length + z * width + x;
+							var id = schematic['Blocks'][index] & 0xFF;
+							var damage = schematic['Data'][index];
+							if (id != 0) {
+								var tx = x + startX;
+								var ty = y + startY;
+								var tz = z + startZ;
 
-						setTile(tx, ty, tz, id, damage);
-						clientMessage("Pasting ... " + parseInt((index / size) * 100, 10) + " %"
-						+ "\n  # X "  + tx + ", Y " + ty + ", Z " + tz + ", Block : " + id + ":" + damage);
-						java.lang.Thread.sleep(delay);
+								setTile(tx, ty, tz, id, damage);
+								clientMessage("Pasting ... " + parseInt((index / size) * 100, 10) + " %"
+								+ "\n  # X "  + tx + ", Y " + ty + ", Z " + tz + ", Block : " + id + ":" + damage);
+								java.lang.Thread.sleep(delay);
+							}
+						}
 					}
-				}}}
+				}
 			} catch (err) {
 				clientMessage("Error : \n  " + err);
 			}
