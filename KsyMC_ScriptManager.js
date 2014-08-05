@@ -1054,7 +1054,7 @@ function Typeface(view, bold) {
 		view.setTypeface(android.graphics.Typeface.createFromFile(resPath + "fonts/" + filename));
 	} catch (e) {
 		runOnUiThread(function() {
-			Toast("데이터 설치후 재시작 바랍니다.").show();
+			Toast("데이터 설치를 완료 할때까지 기다려 주세요.").show();
 		});
 	}
 }
