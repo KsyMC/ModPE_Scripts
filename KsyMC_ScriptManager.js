@@ -13,8 +13,8 @@ var resPath = sdcardPath + "/games/com.mojang/minecraftResources/ScriptManager/"
 var newsHTML = "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0\"></head><body><h3>오프라인 모드</h3><hr><p style=\"text-align: center\">제조일자(KsyMC) <a href=\"mailto:ksy4362@naver.com\">ksy4362@naver.com</a><br>MDS - Minecraft Dev Space <a href=\"http://cafe.naver.com/minecraftdev\">http://cafe.naver.com/minecraftdev</a></p></body></html>";
 
 const CODE = 0;
-const VERSION_CODE = 3;
-const VERSION = "1.1.2 Alpha";
+const VERSION_CODE = 4;
+const VERSION = "1.1.3 Alpha";
 
 const SCRIPT_URL = "https%3A%2F%2Fraw.github.com%2FKsyMC%2Fmodpe_scripts%2Fmaster%2F";
 const DATA_URL = SCRIPT_URL + "data%2F";
@@ -221,7 +221,7 @@ Tab.prototype = {
 				if (offlineMode) {
 					for (var code in scriptVersion.map) {
 						var data = scriptVersion.map[code];
-						var script = new Script(code, data['name'], data['version'], data['version_code'], null, data['file_name'], null);
+						var script = new Script(code, data['name'], data['version'], data['version_code'], null, data['file_name'], null, []);
 						addOfflineScriptButton(this.tabLayout, script);
 					}
 				} else {
